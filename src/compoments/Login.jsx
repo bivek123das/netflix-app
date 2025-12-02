@@ -28,10 +28,7 @@ const Login = () => {
 
   const handleClick =()=>{
     // validate the form
-    //  console.log(email.current.value);
-    //  console.log(password.current.value);
      const message = checkValidData(email.current.value,password.current.value);
-    //  console.log(message);
      setErrorMessage(message);
     //  email.current.value = "";
     //  password.current.value = '';
@@ -46,7 +43,6 @@ const Login = () => {
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
-        // console.log(user);
         updateProfile(user, {
           displayName: name.current.value, photoURL: USER_AVATAR
         }).then(() => {
@@ -80,7 +76,6 @@ const Login = () => {
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        console.log(user);
         setIsLoading(false);
         // ...
       })

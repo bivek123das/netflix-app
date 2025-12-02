@@ -53,7 +53,6 @@ const usePopularMovies = ()=>{
             
             dispatch(addPopularMovies(validMovies));
         } catch (error) {
-            console.error("Failed to fetch popular movies:", error);
             dispatch(setError(`Failed to load popular movies: ${error.message}`));
         } finally {
             dispatch(setLoading(false));

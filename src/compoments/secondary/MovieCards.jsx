@@ -13,7 +13,6 @@ const MovieCards = ({posterPath, movieId}) => {
     
      
     const handleMovieCard = ()=>{
-      // console.log(movieId);
         navigate(`/movieview/${movieId}`)
     }
 

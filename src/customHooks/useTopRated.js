@@ -60,7 +60,6 @@ const useTopRated = ()=>{
             
             dispatch(addTopRatedMovies(validMovies));
         } catch (error) {
-            console.error("Failed to fetch top rated movies:", error);
             dispatch(setError(`Failed to load top rated movies: ${error.message}`));
         } finally {
             dispatch(setLoading(false));

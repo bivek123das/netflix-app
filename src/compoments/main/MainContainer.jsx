@@ -6,18 +6,29 @@ import VideoBackground from './VideoBackground';
 const MainContainer = () => {
 
     const movies = useSelector(store => store.movies?.nowPlayingMovies);
-
-    if(!movies) return ;
+    if(!movies || movies.length === 0){
+      return (
+        <div className='h-[60vh] flex items-center justify-center text-white bg-black'>
+          <p className='text-center text-lg md:text-2xl text-gray-300'>No featured movie available right now. Please try refreshing.</p>
+        </div>
+      )
+    }
 
     const mainmovie = movies[0];
-    // console.log(mainmovie);
+    if(!mainmovie){
+      return (
+        <div className='h-[60vh] flex items-center justify-center text-white bg-black'>
+          <p className='text-center text-lg md:text-2xl text-gray-300'>Loading featured movie...</p>
+        </div>
+      )
+    }
 
-    const {original_title, overview, id, title} = mainmovie;
+    const {original_title, overview, id, title} = mainmovie || {};
 
   return (
     <div className='pt-[38%] bg-black md:pt-[10%] lg:pt-0 relative'>
-         <VideoTitle title={original_title} overview={overview}/>
-         <VideoBackground movieid={id} movieTitle={original_title || title}/>
+         <VideoTitle title={original_title || title || "Untitled"} overview={overview || "Movie details will appear soon."}/>
+         {id && <VideoBackground movieid={id} movieTitle={original_title || title}/>}
     </div>
   )
 }

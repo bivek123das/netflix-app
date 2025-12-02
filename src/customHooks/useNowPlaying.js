@@ -47,8 +47,7 @@ const useNewPlayingMovies = ()=>{
                      };
                  }
                  return null;
-             } catch (error) {
-                 console.error(`Error fetching ${title}:`, error);
+            } catch (error) {
                  return null;
              }
          });
@@ -56,11 +55,9 @@ const useNewPlayingMovies = ()=>{
          const movies = await Promise.all(moviePromises);
          const validMovies = movies.filter(movie => movie !== null);
          
-         console.log("✅ Now Playing Movies fetched successfully:", validMovies.length, "movies");
          dispatch(addNowPlayingMovies(validMovies));
          dispatch(setError(null)); // Clear any previous errors
      } catch (error) {
-         console.error("❌ Failed to fetch now playing movies:", error);
          dispatch(setError(`Failed to load movies: ${error.message}. Please check your OMDB API key in src/utlis/constants.js`));
      } finally {
          dispatch(setLoading(false));

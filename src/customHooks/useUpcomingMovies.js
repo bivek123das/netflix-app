@@ -86,7 +86,6 @@ const useUpcomingMovies = () => {
       
       dispatch(addUpcomingMovies(validMovies));
     } catch (error) {
-      console.error("Failed to fetch upcoming movies:", error);
       dispatch(setError(`Failed to load upcoming movies: ${error.message}`));
     } finally {
       dispatch(setLoading(false));

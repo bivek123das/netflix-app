@@ -9,7 +9,7 @@ export const LOGO = 'https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897
 // You already have an API key: 4fe26d2e
 // Get a new key from: http://www.omdbapi.com/apikey.aspx
 
-export const OMDB_KEY = "4fe26d2e";
+export const OMDB_KEY = "559ba13e";
 export const OMDB_BASE_URL = "http://www.omdbapi.com";
 
 // For movie lists, we'll use a combination of OMDB search with popular movie titles

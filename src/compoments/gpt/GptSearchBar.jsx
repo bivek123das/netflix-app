@@ -36,7 +36,6 @@ const GptSearchBar = () => {
           }
   
           const data = await response.json();
-          console.log(moviename, data);
   
           if (data.Response === "False" || !data.Search || data.Search.length === 0) {
               setErrorMessage(null); // Don't show error message, just clear it
@@ -60,7 +59,6 @@ const GptSearchBar = () => {
               dispatch(addgptMovies({ gptMovieName: moviename, gptMovieResults: transformedResults }));
           }
       } catch (error) {
-          console.error("Failed to search movies:", error);
           // Show error message for API key issues
           if (error.message.includes("API key") || error.message.includes("401")) {
               setErrorMessage(error.message);

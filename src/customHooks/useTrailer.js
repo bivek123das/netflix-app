@@ -19,39 +19,31 @@ const useTrailer = ({ trailerId, movieTitle = null }) => {
           // Get movie title from OMDB if not provided
           let title = movieTitle;
           
-          if (!title) {
-            console.log("Fetching movie title from OMDB for ID:", trailerId);
-            const omdbResponse = await fetch(
+        if (!title) {
+          const omdbResponse = await fetch(
               `${OMDB_BASE_URL}/?apikey=${OMDB_KEY}&i=${trailerId}`,
               API_OPTIONS
             );
             
             if (!omdbResponse.ok) {
-              console.error("OMDB response not OK:", omdbResponse.status);
               throw new Error(`OMDB API failed: ${omdbResponse.status}`);
             }
             
-            const omdbData = await omdbResponse.json();
-            console.log("OMDB response:", omdbData);
+          const omdbData = await omdbResponse.json();
             
             if (omdbData.Response === "True" && omdbData.Title) {
               title = omdbData.Title;
-              console.log("Got title from OMDB:", title);
             } else {
-              console.error("OMDB returned error:", omdbData.Error);
+            throw new Error(omdbData.Error || "OMDB did not return a valid title");
             }
-          } else {
-            console.log("Using provided title:", title);
           }
           
           if (!title) {
-            console.warn("No title found for movie, cannot fetch trailer.");
             return;
           }
           
           // Search YouTube for trailer
           const searchQuery = `${title} official trailer`;
-          console.log("Searching YouTube for:", searchQuery);
           const youtubeResponse = await fetch(
             `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&key=${YOUTUBE_API_KEY}&type=video&maxResults=1&videoEmbeddable=true`
           );
@@ -65,17 +57,12 @@ const useTrailer = ({ trailerId, movieTitle = null }) => {
               errorData = { error: { message: errorText } };
             }
             
-            console.error("YouTube API error:", youtubeResponse.status, errorData);
-            
             // Check if it's a quota exceeded error
             if (errorData.error?.reason === "quotaExceeded" || errorData.error?.message?.includes("quota")) {
-              console.warn("YouTube API quota exceeded. Using fallback trailers for:", title);
-              
               // Use the helper function to find fallback trailer
               const fallbackId = findFallbackTrailer(title);
               
               if (fallbackId) {
-                console.log("Using fallback trailer ID:", fallbackId);
                 const ctrailer = {
                   id: fallbackId,
                   key: fallbackId,
@@ -90,15 +77,13 @@ const useTrailer = ({ trailerId, movieTitle = null }) => {
                 return;
               }
               
-              console.warn("No fallback trailer available for:", title);
               return;
             }
             
             throw new Error(`YouTube API failed: ${youtubeResponse.status} - ${errorData.error?.message || errorText}`);
           }
           
-          const youtubeData = await youtubeResponse.json();
-          console.log("YouTube API response:", youtubeData);
+        const youtubeData = await youtubeResponse.json();
 
           // Check if there's any trailer data
           if (youtubeData.items && youtubeData.items.length > 0) {
@@ -112,14 +97,12 @@ const useTrailer = ({ trailerId, movieTitle = null }) => {
               size: 1080
             };
 
-            console.log("Trailer data created:", ctrailer);
             // Dispatch the action to store the trailer in Redux with movieId
             dispatch(addCardTrailer({ movieId: trailerId, trailer: ctrailer }));
           } else {
-            console.warn("No trailer found for this movie.");
+          return;
           }
         } catch (error) {
-          console.error("Failed to fetch trailer:", error);
           // Error is already handled in the try block (quota exceeded, etc.)
         } finally {
           setIsFetching(false);
